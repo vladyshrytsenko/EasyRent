@@ -9,6 +9,8 @@ import com.faceitteam.rentapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -21,6 +23,13 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
         return UserDto.toDto(user);
+    }
+
+    @Override
+    public List<UserDto> findAll() {
+
+        List<User> userList = userRepository.findAll();
+        return UserDto.toDtoList(userList);
     }
 
     @Override

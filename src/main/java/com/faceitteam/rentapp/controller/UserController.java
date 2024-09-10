@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -21,21 +23,12 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
-//    @GetMapping("/by-username/{username}")
-//    public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
-//        UserDto userDto = userService.getByUsername(username);
-//        return ResponseEntity.ok(userDto);
-//    }
-//
-//    @GetMapping("/by-role/{role}")
-//    public ResponseEntity<UserDto> getUserByRole(@PathVariable Role role) {
-//        UserDto userDto = userService.findByRole(role);
-//        if (userDto != null) {
-//            return ResponseEntity.ok(userDto);
-//        } else {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//        }
-//    }
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+
+        List<UserDto> users = userService.findAll();
+        return ResponseEntity.ok(users);
+    }
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userRequestDto) {
