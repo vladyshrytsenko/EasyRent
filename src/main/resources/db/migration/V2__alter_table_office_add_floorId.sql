@@ -1,0 +1,9 @@
+
+ALTER TABLE offices
+    ADD COLUMN floor_id BIGINT,
+    ADD COLUMN capacity INTEGER,
+    ADD FOREIGN KEY (floor_id) REFERENCES floors(id) ON DELETE CASCADE;
+
+ALTER TABLE floors
+    ALTER COLUMN svg_path TYPE TEXT,
+    ADD COLUMN is_available BOOLEAN DEFAULT TRUE;

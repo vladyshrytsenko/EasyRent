@@ -25,7 +25,7 @@ public class OfficeServiceImpl implements OfficeService {
         Office office = Office.builder()
             .name(officeDto.getName())
             .description(officeDto.getDescription())
-            .photos(officeDto.getPhotos())
+            .capacity(officeDto.getCapacity())
             .hourlyPrice(officeDto.getHourlyPrice())
             .dailyPrice(officeDto.getDailyPrice())
             .monthlyPrice(officeDto.getMonthlyPrice())

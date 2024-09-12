@@ -15,7 +15,9 @@ public class FloorDto {
 
     private Long id;
     private String svgPath;
+    private boolean isAvailable;
     private List<OfficeDto> offices;
+    private List<String> photos;
 
     public static FloorDto toDto(Floor floor) {
         if (floor == null) {
@@ -25,7 +27,9 @@ public class FloorDto {
         return FloorDto.builder()
             .id(floor.getId())
             .svgPath(floor.getSvgPath())
+            .isAvailable(floor.isAvailable())
             .offices(OfficeDto.toDtoList(floor.getOffices()))
+            .photos(floor.getPhotos())
             .build();
     }
 
@@ -47,7 +51,9 @@ public class FloorDto {
         return Floor.builder()
             .id(floorDto.getId())
             .svgPath(floorDto.getSvgPath())
+            .isAvailable(floorDto.isAvailable())
             .offices(OfficeDto.toEntityList(floorDto.getOffices()))
+            .photos(floorDto.getPhotos())
             .build();
     }
 

@@ -32,9 +32,8 @@ public class Office {
 
     private String name;
     private String description;
+    private int capacity;
 
-    @ElementCollection
-    private List<String> photos; // url || base64
     private BigDecimal hourlyPrice;
     private BigDecimal dailyPrice;
     private BigDecimal monthlyPrice;

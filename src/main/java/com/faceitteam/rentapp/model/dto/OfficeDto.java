@@ -17,11 +17,13 @@ public class OfficeDto {
     private Long id;
     private String name;
     private String description;
+    private int capacity;
     private List<String> photos;
     private BigDecimal hourlyPrice;
     private BigDecimal dailyPrice;
     private BigDecimal monthlyPrice;
     private BigDecimal longTermPrice;
+    private FloorDto floor;
 
     private List<BookingDto> bookings;
     private List<AvailabilityDto> availabilities;
@@ -35,13 +37,14 @@ public class OfficeDto {
             .id(office.getId())
             .name(office.getName())
             .description(office.getDescription())
-            .photos(office.getPhotos())
+            .capacity(office.getCapacity())
             .hourlyPrice(office.getHourlyPrice())
             .dailyPrice(office.getDailyPrice())
             .monthlyPrice(office.getMonthlyPrice())
             .longTermPrice(office.getLongTermPrice())
             .bookings(BookingDto.toDtoList(office.getBookings()))
             .availabilities(AvailabilityDto.toDtoList(office.getAvailabilities()))
+            .floor(FloorDto.toDto(office.getFloor()))
             .build();
     }
 
@@ -64,13 +67,14 @@ public class OfficeDto {
             .id(officeDto.getId())
             .name(officeDto.getName())
             .description(officeDto.getDescription())
-            .photos(officeDto.getPhotos())
+            .capacity(officeDto.getCapacity())
             .hourlyPrice(officeDto.getHourlyPrice())
             .dailyPrice(officeDto.getDailyPrice())
             .monthlyPrice(officeDto.getMonthlyPrice())
             .longTermPrice(officeDto.getLongTermPrice())
             .bookings(BookingDto.toEntityList(officeDto.getBookings()))
             .availabilities(AvailabilityDto.toEntityList(officeDto.getAvailabilities()))
+            .floor(FloorDto.toEntity(officeDto.getFloor()))
             .build();
     }
 
