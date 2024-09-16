@@ -48,19 +48,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto register(UserDto userRequestDTO) {
-        User user = User.builder()
-            .username(userRequestDTO.getUsername())
-            .password(userRequestDTO.getPassword()) // should be encrypted
-            .email(userRequestDTO.getEmail())
-            .role(userRequestDTO.getRole())
-            .build();
-
-        User saved = userRepository.save(user);
-        return UserDto.toDto(saved);
-    }
-
-    @Override
     public UserDto update(Long id, UserDto userRequest) {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
@@ -78,4 +65,3 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 }
-

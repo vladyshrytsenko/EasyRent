@@ -1,7 +1,9 @@
 package com.faceitteam.rentapp.controller;
 
+import com.faceitteam.rentapp.model.AuthenticationResponse;
 import com.faceitteam.rentapp.model.dto.UserDto;
 import com.faceitteam.rentapp.service.UserService;
+import com.faceitteam.rentapp.service.auth.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final AuthenticationService authenticationService;
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
@@ -30,11 +33,18 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userRequestDto) {
+    @PostMapping("/auth/register")
+    public ResponseEntity<AuthenticationResponse> registerUser(@RequestBody UserDto userRequestDto) {
 
-        UserDto savedUser = userService.register(userRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+        AuthenticationResponse registered = authenticationService.register(userRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(registered);
+    }
+
+    @PostMapping("/auth/authenticate")
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody UserDto userRequestDto) {
+
+        AuthenticationResponse authenticated = authenticationService.authenticate(userRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(authenticated);
     }
 
     @PutMapping("/{id}")
