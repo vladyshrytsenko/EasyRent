@@ -8,8 +8,11 @@ import com.faceitteam.rentapp.model.entity.Office;
 import com.faceitteam.rentapp.repository.FloorRepository;
 import com.faceitteam.rentapp.service.FloorService;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -33,11 +36,19 @@ public class FloorServiceImpl implements FloorService {
     }
 
     @Override
-    public FloorDto create(FloorDto floorDto) {
+    public FloorDto create(FloorDto floorDto, MultipartFile file) {
         List<Office> offices = OfficeDto.toEntityList(floorDto.getOffices());
+        String svgStr = null;
+        if (file != null) {
+            try {
+                svgStr = convertMultipartFileToBase64(file);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         Floor floor = Floor.builder()
-            .svgPath(floorDto.getSvgPath())
+            .svgPath(svgStr)
             .offices(offices)
             .photos(floorDto.getPhotos())
             .build();
@@ -71,5 +82,10 @@ public class FloorServiceImpl implements FloorService {
     @Override
     public void deleteById(Long id) {
         floorRepository.deleteById(id);
+    }
+
+    private static String convertMultipartFileToBase64(MultipartFile file) throws IOException {
+        byte[] fileContent = file.getBytes();
+        return Base64.encodeBase64String(fileContent);
     }
 }

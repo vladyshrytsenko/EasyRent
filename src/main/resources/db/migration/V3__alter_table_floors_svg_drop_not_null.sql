@@ -1,0 +1,3 @@
+
+ALTER TABLE floors
+    ALTER COLUMN svg_path DROP NOT NULL;

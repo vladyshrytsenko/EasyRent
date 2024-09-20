@@ -2,6 +2,7 @@ package com.faceitteam.rentapp.controller;
 
 import com.faceitteam.rentapp.model.AuthenticationResponse;
 import com.faceitteam.rentapp.model.dto.UserDto;
+import com.faceitteam.rentapp.model.enums.Role;
 import com.faceitteam.rentapp.service.UserService;
 import com.faceitteam.rentapp.service.auth.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,20 @@ public class UserController {
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
 
         UserDto userDto = userService.getById(id);
+        return ResponseEntity.ok(userDto);
+    }
+
+    @GetMapping("/username/{username}")
+    public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
+
+        UserDto userDto = userService.getByUsername(username);
+        return ResponseEntity.ok(userDto);
+    }
+
+    @GetMapping("/role/{role}")
+    public ResponseEntity<UserDto> getUserByRole(@PathVariable String role) {
+
+        UserDto userDto = userService.findByRole(Role.valueOf(role));
         return ResponseEntity.ok(userDto);
     }
 

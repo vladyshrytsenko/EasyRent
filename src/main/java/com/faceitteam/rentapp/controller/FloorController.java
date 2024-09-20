@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -38,9 +40,11 @@ public class FloorController {
     }
 
     @PostMapping
-    public ResponseEntity<FloorDto> create(@RequestBody FloorDto floorRequestDto) {
+    public ResponseEntity<FloorDto> create(
+        @RequestPart(value = "floor") FloorDto floorRequestDto,
+        @RequestPart(value = "file", required = false) MultipartFile file) {
 
-        FloorDto savedFloor = floorService.create(floorRequestDto);
+        FloorDto savedFloor = floorService.create(floorRequestDto, file);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedFloor);
     }
 
