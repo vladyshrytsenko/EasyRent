@@ -42,19 +42,22 @@ public class FloorController {
     @PostMapping
     public ResponseEntity<FloorDto> create(
         @RequestPart(value = "floor") FloorDto floorRequestDto,
-        @RequestPart(value = "file", required = false) MultipartFile file) {
+        @RequestPart(value = "svg", required = false) MultipartFile svg,
+        @RequestPart(value = "photos", required = false) List<MultipartFile> photos
+        ) {
 
-        FloorDto savedFloor = floorService.create(floorRequestDto, file);
+        FloorDto savedFloor = floorService.create(floorRequestDto, svg, photos);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedFloor);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<FloorDto> updateById(
         @PathVariable Long id,
-        @RequestBody FloorDto floorRequestDto) {
+        @RequestPart(value = "floor") FloorDto floorRequestDto,
+        @RequestPart(value = "photos", required = false) List<MultipartFile> photos) {
 
-        FloorDto updatedFloor = floorService.updateById(id, floorRequestDto);
-        return ResponseEntity.ok(floorRequestDto);
+        FloorDto updatedFloor = floorService.updateById(id, floorRequestDto, photos);
+        return ResponseEntity.ok(updatedFloor);
     }
 
     @DeleteMapping("/{id}")

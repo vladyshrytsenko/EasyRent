@@ -11,6 +11,7 @@ public interface UserService {
     List<UserDto> findAll();
     UserDto findByRole(Role role);
     UserDto getByUsername(String username);
+    UserDto getByEmail(String email);
     UserDto update(Long id, UserDto user);
     void delete(Long id);
 }

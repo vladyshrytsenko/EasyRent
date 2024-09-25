@@ -9,7 +9,7 @@ public interface FloorService {
 
     FloorDto getById(Long id);
     List<FloorDto> findAll();
-    FloorDto create(FloorDto floorDto, MultipartFile file);
-    FloorDto updateById(Long id, FloorDto floorDto);
+    FloorDto create(FloorDto floorDto, MultipartFile file, List<MultipartFile> photos);
+    FloorDto updateById(Long id, FloorDto floorDto, List<MultipartFile> photosFile);
     void deleteById(Long id);
 }

@@ -26,6 +26,7 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/api/users/auth/**",
+                    "/api/users/**",
                     "/api/floors/**",
                     "/api/offices"
                 ).permitAll()

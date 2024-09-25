@@ -1,5 +1,6 @@
 package com.faceitteam.rentapp.config;
 
+import com.faceitteam.rentapp.model.entity.User;
 import com.faceitteam.rentapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -8,10 +9,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
 
 @Configuration
 @RequiredArgsConstructor
@@ -21,8 +25,24 @@ public class UserDetailsConfig {
 
     @Bean
     public UserDetailsService getUserDetailsService() {
-        return username -> userRepository.findByEmail(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found."));
+        return new UserDetailsService() {
+
+            @Override
+            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+                User currentUser = null;
+                if (!username.contains("@")) {
+                    Optional<User> byUsername = userRepository.findByUsername(username);
+                    if (byUsername.isPresent()) {
+                        currentUser = userRepository.findByEmail(byUsername.get().getEmail())
+                            .orElseThrow(() -> new UsernameNotFoundException("User not found."));
+                    }
+                } else {
+                    currentUser = userRepository.findByEmail(username)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found."));
+                }
+                return currentUser;
+            }
+        };
     }
 
     @Bean

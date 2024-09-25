@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,12 +37,20 @@ public class FloorServiceImpl implements FloorService {
     }
 
     @Override
-    public FloorDto create(FloorDto floorDto, MultipartFile file) {
+    public FloorDto create(FloorDto floorDto, MultipartFile svgFile, List<MultipartFile> photosFile) {
         List<Office> offices = OfficeDto.toEntityList(floorDto.getOffices());
         String svgStr = null;
-        if (file != null) {
+        List<String> photosAsBase64 = null;
+        if (svgFile != null) {
             try {
-                svgStr = convertMultipartFileToBase64(file);
+                svgStr = convertMultipartFilesToBase64(List.of(svgFile)).get(0);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (photosFile != null) {
+            try {
+                photosAsBase64 = convertMultipartFilesToBase64(photosFile);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -50,7 +59,7 @@ public class FloorServiceImpl implements FloorService {
         Floor floor = Floor.builder()
             .svgPath(svgStr)
             .offices(offices)
-            .photos(floorDto.getPhotos())
+            .photos(photosAsBase64)
             .build();
 
         floor.setAvailable(true);
@@ -60,9 +69,11 @@ public class FloorServiceImpl implements FloorService {
     }
 
     @Override
-    public FloorDto updateById(Long id, FloorDto floorDto) {
+    public FloorDto updateById(Long id, FloorDto floorDto, List<MultipartFile> photosFile) {
         Floor floorById = floorRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Floor not found with id: " + id));
+
+        List<String> photosAsBase64 = null;
 
         if (floorDto.getSvgPath() != null) {
             floorById.setSvgPath(floorDto.getSvgPath());
@@ -71,8 +82,13 @@ public class FloorServiceImpl implements FloorService {
             List<Office> offices = OfficeDto.toEntityList(floorDto.getOffices());
             floorById.setOffices(offices);
         }
-        if (floorDto.getPhotos() != null) {
-            floorById.setPhotos(floorDto.getPhotos());
+        if (photosFile != null) {
+            try {
+                photosAsBase64 = convertMultipartFilesToBase64(photosFile);
+                floorById.setPhotos(photosAsBase64);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         Floor updated = floorRepository.save(floorById);
@@ -84,8 +100,16 @@ public class FloorServiceImpl implements FloorService {
         floorRepository.deleteById(id);
     }
 
-    private static String convertMultipartFileToBase64(MultipartFile file) throws IOException {
-        byte[] fileContent = file.getBytes();
-        return Base64.encodeBase64String(fileContent);
+    private static List<String> convertMultipartFilesToBase64(List<MultipartFile> files) throws IOException {
+        List<String> base64Files = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            byte[] fileContent = file.getBytes();
+            String base64String = Base64.encodeBase64String(fileContent);
+            base64Files.add(base64String);
+        }
+
+        return base64Files;
     }
+
 }
