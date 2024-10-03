@@ -58,6 +58,7 @@ public class FloorServiceImpl implements FloorService {
 
         Floor floor = Floor.builder()
             .svgPath(svgStr)
+            .number(floorDto.getNumber())
             .offices(offices)
             .photos(photosAsBase64)
             .build();

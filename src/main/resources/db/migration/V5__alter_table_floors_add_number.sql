@@ -1,0 +1,3 @@
+
+ALTER TABLE floors
+    ADD COLUMN number SERIAL NOT NULL;

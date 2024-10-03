@@ -30,6 +30,7 @@ public class Floor {
 
     private String svgPath;
     private boolean isAvailable = true;
+    private Integer number;
 
     @ElementCollection
     private List<String> photos = new ArrayList<>(); // url || base64
